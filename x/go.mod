@@ -25,4 +25,4 @@ require (
 	google.golang.org/protobuf v1.36.10 // indirect
 )
 
-replace github.com/abulo/asynq => github.com/hibiken/asynq v0.26.0
+// replace github.com/abulo/asynq => github.com/hibiken/asynq v0.26.0

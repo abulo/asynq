@@ -19,4 +19,4 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 )
 
-replace github.com/abulo/asynq => ../asynq
+// replace github.com/abulo/asynq => ../asynq
