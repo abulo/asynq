@@ -150,9 +150,7 @@ func (p *processor) shutdown() {
 }
 
 func (p *processor) start(wg *sync.WaitGroup) {
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		for {
 			select {
 			case <-p.done:
@@ -162,7 +160,7 @@ func (p *processor) start(wg *sync.WaitGroup) {
 				p.exec()
 			}
 		}
-	}()
+	})
 }
 
 // exec pulls a task out of the queue and starts a worker goroutine to
@@ -410,7 +408,7 @@ func (p *processor) queues() []string {
 	}
 	var names []string
 	for qname, priority := range p.queueConfig {
-		for i := 0; i < priority; i++ {
+		for range priority {
 			names = append(names, qname)
 		}
 	}
@@ -511,7 +509,7 @@ func gcd(xs ...int) int {
 		return x
 	}
 	res := xs[0]
-	for i := 0; i < len(xs); i++ {
+	for i := range xs {
 		res = fn(xs[i], res)
 		if res == 1 {
 			return 1

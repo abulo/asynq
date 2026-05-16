@@ -60,9 +60,7 @@ func (hc *healthchecker) start(wg *sync.WaitGroup) {
 		return
 	}
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		timer := time.NewTimer(hc.interval)
 		for {
 			select {
@@ -76,5 +74,5 @@ func (hc *healthchecker) start(wg *sync.WaitGroup) {
 				timer.Reset(hc.interval)
 			}
 		}
-	}()
+	})
 }

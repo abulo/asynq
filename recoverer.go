@@ -58,9 +58,7 @@ func (r *recoverer) shutdown() {
 }
 
 func (r *recoverer) start(wg *sync.WaitGroup) {
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		r.recover()
 		timer := time.NewTimer(r.interval)
 		for {
@@ -74,7 +72,7 @@ func (r *recoverer) start(wg *sync.WaitGroup) {
 				timer.Reset(r.interval)
 			}
 		}
-	}()
+	})
 }
 
 // ErrLeaseExpired error indicates that the task failed because the worker working on the task

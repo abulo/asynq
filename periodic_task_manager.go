@@ -127,9 +127,7 @@ func (mgr *PeriodicTaskManager) Start() error {
 	if err := mgr.s.Start(); err != nil {
 		return fmt.Errorf("asynq: %w", err)
 	}
-	mgr.wg.Add(1)
-	go func() {
-		defer mgr.wg.Done()
+	mgr.wg.Go(func() {
 		ticker := time.NewTicker(mgr.syncInterval)
 		for {
 			select {
@@ -141,7 +139,7 @@ func (mgr *PeriodicTaskManager) Start() error {
 				mgr.sync()
 			}
 		}
-	}()
+	})
 	return nil
 }
 

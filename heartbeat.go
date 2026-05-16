@@ -108,9 +108,7 @@ type workerInfo struct {
 }
 
 func (h *heartbeater) start(wg *sync.WaitGroup) {
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 
 		h.started = h.clock.Now()
 
@@ -138,7 +136,7 @@ func (h *heartbeater) start(wg *sync.WaitGroup) {
 				delete(h.workers, msg.ID)
 			}
 		}
-	}()
+	})
 }
 
 // beat extends lease for workers and writes server/worker info to redis.

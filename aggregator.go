@@ -62,10 +62,7 @@ const (
 )
 
 func newAggregator(params aggregatorParams) *aggregator {
-	interval := defaultAggregationCheckInterval
-	if params.gracePeriod < interval {
-		interval = params.gracePeriod
-	}
+	interval := min(params.gracePeriod, defaultAggregationCheckInterval)
 	return &aggregator{
 		logger:      params.logger,
 		broker:      params.broker,
@@ -94,9 +91,7 @@ func (a *aggregator) start(wg *sync.WaitGroup) {
 	if a.ga == nil {
 		return
 	}
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		ticker := time.NewTicker(a.interval)
 		for {
 			select {
@@ -113,7 +108,7 @@ func (a *aggregator) start(wg *sync.WaitGroup) {
 				a.exec(t)
 			}
 		}
-	}()
+	})
 }
 
 func (a *aggregator) exec(t time.Time) {

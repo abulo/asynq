@@ -53,9 +53,7 @@ func (f *forwarder) shutdown() {
 
 // start starts the "forwarder" goroutine.
 func (f *forwarder) start(wg *sync.WaitGroup) {
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		timer := time.NewTimer(f.avgInterval)
 		for {
 			select {
@@ -67,7 +65,7 @@ func (f *forwarder) start(wg *sync.WaitGroup) {
 				timer.Reset(f.avgInterval)
 			}
 		}
-	}()
+	})
 }
 
 func (f *forwarder) exec() {
